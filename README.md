@@ -70,6 +70,45 @@ python make_previews.py model.glb --config my_settings.json
 | `--blender PATH` | Blender executable |
 | `-v, --verbose` | Show all Blender output |
 
+## Polygon and vertex counts
+
+TurboSquid's product specs ask for the polygon count, the vertex count and the
+geometry type. `model_stats.py` reports them:
+
+```powershell
+python model_stats.py "D:\...\ExportedFinalModels\harryPotterWand8.glb"
+python model_stats.py "D:\...\ExportedFinalModels"            # every model in the folder
+python model_stats.py model.fbx --exclude "Helper*" --json stats.json
+```
+
+```
+harryPotterWand4.fbx
+  Object    Polygons  Triangles  Vertices  Verts in file  Quads    Tris  N-gons  Loose verts
+  Cube           150        300       152            152    150       0       0            0
+  ...
+  TOTAL       26,107     26,670    13,548         15,031    502  25,602       3           36
+
+  Geometry type : Polygonal Ngons used
+  For TurboSquid: Polygons = 26,107   Vertices = 13,548
+```
+
+- **Polygons** are faces as modeled (a quad counts as one), on the base mesh
+  without subdivision, summed over all parts, as TurboSquid's
+  [polygon count guide](https://resources.turbosquid.com/?p=10465) asks.
+  **Triangles** is the triangulated count.
+- **Vertices** are geometric vertices (identical positions merged).
+  **Verts in file** is the raw count the file stores; glTF/GLB splits vertices
+  along UV seams and hard edges, so it is higher there.
+- **Geometry type** matches TurboSquid's publisher choices (Quads only,
+  Quads/Tris, Tris only, Ngons used).
+- GLB/glTF always stores triangles, so count the `.fbx`/`.blend` when the
+  model was built from quads.
+- Loose vertices/edges (not part of any face) and subdivision modifiers are
+  flagged.
+
+Options: `--pattern` (folder filter, default all formats), `--exclude`,
+`--summary` (totals only), `--json FILE`, `--blender`, `-v`.
+
 ## Customizing (config/default.json)
 
 Copy only the keys you want to change into your own JSON and pass it with
@@ -131,9 +170,11 @@ Example `my_settings.json`:
 ```
 make_previews.py        launcher (finds Blender, CLI, batch processing)
 make_previews.bat       drag-and-drop wrapper for Windows
+model_stats.py          polygon / vertex count report
 config/default.json     all render settings and camera angles
 tspreview/
-  blender_main.py       entry point that runs inside Blender
+  blender_main.py       entry point that runs inside Blender (previews)
+  blender_stats.py      entry point that runs inside Blender (counts)
   scene.py              import, normalization, render/world/lights/ground setup
   framing.py            camera directions and perspective fitting
   shots.py              search / product / wireframe / turntable renderers

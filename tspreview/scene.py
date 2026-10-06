@@ -32,6 +32,18 @@ def reset_scene():
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
 
+def _patch_fbx_light_import():
+    """Blender 5.x's FBX importer still sets light.cycles.cast_shadow, which Cycles
+    removed, so any FBX containing a light fails to import. Give it a dummy property."""
+    probe = bpy.data.lights.new("ts_probe", "POINT")
+    try:
+        settings = type(getattr(probe, "cycles", None))  # not exposed in bpy.types
+        if hasattr(settings, "bl_rna") and "cast_shadow" not in settings.bl_rna.properties:
+            settings.cast_shadow = bpy.props.BoolProperty()
+    finally:
+        bpy.data.lights.remove(probe)
+
+
 def import_model(path):
     """Import any supported model file and return the newly created objects."""
     ext = os.path.splitext(path)[1].lower()
@@ -39,6 +51,7 @@ def import_model(path):
     if ext in (".glb", ".gltf"):
         bpy.ops.import_scene.gltf(filepath=path)
     elif ext == ".fbx":
+        _patch_fbx_light_import()
         bpy.ops.import_scene.fbx(filepath=path)
     elif ext == ".obj":
         bpy.ops.wm.obj_import(filepath=path)
@@ -122,7 +135,10 @@ def prepare_model(path, exclude_patterns):
     """
     imported = import_model(path)
     for obj in imported:
-        if _is_excluded(obj, exclude_patterns):
+        if obj.type == "LIGHT":  # lights saved in the file would fight the preview rig
+            obj.hide_render = True
+            print(f"[tspreview] ignoring light from file: {obj.name}")
+        elif _is_excluded(obj, exclude_patterns):
             obj.hide_render = True
             obj.hide_viewport = True
             print(f"[tspreview] excluded object: {obj.name}")
