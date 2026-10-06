@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.blend1
+TurboSquid_Previews/
+output/
+_tmp/

@@ -1,0 +1,81 @@
+{
+  "outputs": ["search", "product", "wireframe", "turntable", "uv"],
+  "exclude_objects": [],
+
+  "background_rgb": [247, 247, 247],
+  "image_format": "PNG",
+  "jpeg_quality": 95,
+
+  "device": "AUTO",
+  "samples": 128,
+  "view_transform": "AgX",
+  "look": "AgX - Medium High Contrast",
+  "exposure": 0.0,
+  "lens_mm": 50,
+  "shadow": true,
+  "shadow_noise_floor": 0.02,
+
+  "lighting": {
+    "ambient_strength": 0.0,
+    "hdri": "studio.exr",
+    "hdri_strength": 0.8,
+    "lights": {
+      "key":  {"strength": 3.0, "azimuth": -40, "elevation": 50, "softness_deg": 20, "shadow": true},
+      "fill": {"strength": 1.2, "azimuth": 55,  "elevation": 20, "softness_deg": 45, "shadow": false},
+      "rim":  {"strength": 2.5, "azimuth": 160, "elevation": 35, "softness_deg": 20, "shadow": false}
+    }
+  },
+
+  "search": {
+    "resolution": [1200, 1200],
+    "azimuth": -35,
+    "elevation": 25,
+    "fill": 0.92
+  },
+
+  "product": {
+    "resolution": [1920, 1080],
+    "fill": 0.85,
+    "detail_fraction": 0.3,
+    "shots": [
+      {"name": "front_left",   "azimuth": -35,  "elevation": 22},
+      {"name": "front_right",  "azimuth": 35,   "elevation": 22},
+      {"name": "back_right",   "azimuth": 145,  "elevation": 25},
+      {"name": "back_left",    "azimuth": -145, "elevation": 25},
+      {"name": "front",        "azimuth": 0,    "elevation": 8},
+      {"name": "side",         "azimuth": 90,   "elevation": 8},
+      {"name": "top",          "azimuth": 0,    "elevation": 85},
+      {"name": "detail_end_a", "azimuth": -35,  "elevation": 30, "detail": "end_a", "fill": 0.9},
+      {"name": "detail_end_b", "azimuth": 35,   "elevation": 30, "detail": "end_b", "fill": 0.9}
+    ]
+  },
+
+  "wireframe": {
+    "resolution": [1920, 1080],
+    "fill": 0.85,
+    "surface_grey": 0.72,
+    "wire_grey": 0.03,
+    "wire_width_px": 1.2,
+    "max_wire_fraction_of_edge": 0.2,
+    "shots": [
+      {"name": "front_left", "azimuth": -35, "elevation": 22},
+      {"name": "back_right", "azimuth": 145, "elevation": 25}
+    ]
+  },
+
+  "turntable": {
+    "resolution": [1920, 1080],
+    "frames": 24,
+    "azimuth": 0,
+    "elevation": 20,
+    "fill": 0.85,
+    "samples": 64
+  },
+
+  "uv": {
+    "resolution": 800,
+    "line_color": "auto",
+    "line_opacity": 0.9,
+    "line_width_px": 1.0
+  }
+}
